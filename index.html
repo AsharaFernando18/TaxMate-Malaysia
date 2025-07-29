@@ -3,127 +3,901 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Malaysia Tax Calculator 2025</title>
+  <title>TaxMate Malaysia 2025 - Professional Tax Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
+    :root {
+      --primary-color: #2563eb;
+      --primary-dark: #1e40af;
+      --primary-light: #3b82f6;
+      --secondary-color: #64748b;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --error-color: #ef4444;
+      --background-color: #f8fafc;
+      --surface-color: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --border-color: #e2e8f0;
+      --border-radius: 12px;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
     * {
       box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    body {
       margin: 0;
       padding: 0;
-      background: #f4f6f8;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
+      color: var(--text-primary);
+      line-height: 1.6;
     }
-    .container {
-      background: white;
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      max-width: 500px;
+
+    .app-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .main-container {
+      background: var(--surface-color);
+      border-radius: 24px;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      max-width: 1200px;
       width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
-    h2 {
+
+    .calculator-section {
+      padding: 48px;
+    }
+
+    .results-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .header {
       text-align: center;
-      margin-bottom: 20px;
-      color: #333;
+      margin-bottom: 40px;
     }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .header .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      font-weight: 400;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
     label {
-      display: block;
-      margin-top: 20px;
-      color: #444;
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      font-size: 0.95rem;
     }
+
+    label i {
+      margin-right: 8px;
+      color: var(--primary-color);
+      width: 16px;
+    }
+
+    .tooltip {
+      position: relative;
+      margin-left: 8px;
+      cursor: help;
+    }
+
+    .tooltip i {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 250px;
+      background-color: var(--text-primary);
+      color: white;
+      text-align: left;
+      border-radius: 8px;
+      padding: 12px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -125px;
+      opacity: 0;
+      transition: var(--transition);
+      font-size: 0.875rem;
+      font-weight: 400;
+      line-height: 1.4;
+      box-shadow: var(--shadow-md);
+    }
+
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .input-container {
+      position: relative;
+    }
+
     input[type="number"] {
       width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
+      padding: 16px 48px 16px 16px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: var(--transition);
+      background: var(--surface-color);
     }
-    button {
-      margin-top: 30px;
-      width: 100%;
-      background-color: #007bff;
-      color: white;
-      padding: 12px;
-      border: none;
-      border-radius: 10px;
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .currency-symbol {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      font-weight: 500;
+      pointer-events: none;
+    }
+
+    .advanced-options {
+      margin-top: 32px;
+      border-top: 2px solid var(--border-color);
+      padding-top: 32px;
+    }
+
+    .advanced-toggle {
+      display: flex;
+      align-items: center;
       cursor: pointer;
-      font-size: 16px;
+      color: var(--primary-color);
+      font-weight: 500;
+      margin-bottom: 24px;
+      transition: var(--transition);
     }
-    button:hover {
-      background-color: #0056b3;
+
+    .advanced-toggle:hover {
+      color: var(--primary-dark);
     }
-    .result {
-      margin-top: 30px;
-      padding: 20px;
-      background: #e8f0fe;
-      border-radius: 10px;
-      color: #333;
+
+    .advanced-toggle i {
+      margin-left: 8px;
+      transition: var(--transition);
+    }
+
+    .advanced-content {
+      display: none;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    .advanced-content.show {
+      display: block;
+    }
+
+    .relief-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .calculate-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+      color: white;
+      border: none;
+      padding: 18px 24px;
+      border-radius: var(--border-radius);
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .calculate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .calculate-btn:active {
+      transform: translateY(0);
+    }
+
+    .calculate-btn.loading {
+      opacity: 0.8;
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    .results-container {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: var(--transition);
+    }
+
+    .results-container.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--border-radius);
+      padding: 24px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(10px);
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .result-header h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-left: 12px;
+    }
+
+    .result-amount {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .result-label {
+      opacity: 0.9;
+      font-size: 0.95rem;
+    }
+
+    .breakdown-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .breakdown-item:last-child {
+      border-bottom: none;
+    }
+
+    .breakdown-label {
+      opacity: 0.9;
+    }
+
+    .breakdown-value {
+      font-weight: 600;
+    }
+
+    .tax-brackets {
+      margin-top: 24px;
+    }
+
+    .bracket-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      margin: 4px 0;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    .bracket-rate {
+      font-weight: 600;
+      color: #fbbf24;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 12px 16px;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        max-height: 0;
+      }
+      to {
+        opacity: 1;
+        max-height: 1000px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        grid-template-columns: 1fr;
+        max-width: 500px;
+      }
+      
+      .calculator-section,
+      .results-section {
+        padding: 32px 24px;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .relief-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .result-amount {
+        font-size: 2rem;
+      }
+    }
+
+    .error-message {
+      color: var(--error-color);
+      font-size: 0.875rem;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .success-animation {
+      animation: pulse 0.6s ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Malaysia Tax Calculator 2025</h2>
-    <label for="income">Annual Gross Income (RM)</label>
-    <input type="number" id="income" placeholder="e.g., 60000" />
+  <div class="app-container">
+    <div class="main-container">
+      <!-- Calculator Section -->
+      <div class="calculator-section">
+        <div class="header">
+          <h1>TaxMate Malaysia</h1>
+          <p class="subtitle">Professional Tax Calculator 2025</p>
+        </div>
 
-    <label for="epf">Annual EPF Contribution (RM)</label>
-    <input type="number" id="epf" placeholder="e.g., 4000 (max claimable)" />
+        <form id="taxForm">
+          <div class="form-group">
+            <label for="income">
+              <i class="fas fa-money-bill-wave"></i>
+              Annual Gross Income
+              <span class="tooltip">
+                <i class="fas fa-info-circle"></i>
+                <span class="tooltip-text">Your total yearly income before any deductions including salary, bonuses, and allowances.</span>
+              </span>
+            </label>
+            <div class="input-container">
+              <input type="number" id="income" placeholder="e.g., 60000" min="0" step="100" required />
+              <span class="currency-symbol">RM</span>
+            </div>
+            <div class="error-message" id="income-error"></div>
+          </div>
 
-    <button onclick="calculateTax()">Calculate Tax</button>
+          <div class="form-group">
+            <label for="epf">
+              <i class="fas fa-piggy-bank"></i>
+              EPF Contribution
+              <span class="tooltip">
+                <i class="fas fa-info-circle"></i>
+                <span class="tooltip-text">Maximum claimable EPF contribution is RM 4,000 per year.</span>
+              </span>
+            </label>
+            <div class="input-container">
+              <input type="number" id="epf" placeholder="Maximum: 4000" min="0" max="4000" step="100" />
+              <span class="currency-symbol">RM</span>
+            </div>
+          </div>
 
-    <div class="result" id="result" style="display:none"></div>
+          <div class="advanced-options">
+            <div class="advanced-toggle" onclick="toggleAdvanced()">
+              <span>Advanced Tax Relief Options</span>
+              <i class="fas fa-chevron-down" id="advancedIcon"></i>
+            </div>
+            
+            <div class="advanced-content" id="advancedContent">
+              <div class="relief-grid">
+                <div class="form-group">
+                  <label for="medical">
+                    <i class="fas fa-hospital"></i>
+                    Medical Expenses
+                  </label>
+                  <div class="input-container">
+                    <input type="number" id="medical" placeholder="Max: 8000" min="0" max="8000" step="100" />
+                    <span class="currency-symbol">RM</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="education">
+                    <i class="fas fa-graduation-cap"></i>
+                    Education Fees
+                  </label>
+                  <div class="input-container">
+                    <input type="number" id="education" placeholder="Max: 7000" min="0" max="7000" step="100" />
+                    <span class="currency-symbol">RM</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="insurance">
+                    <i class="fas fa-shield-alt"></i>
+                    Life Insurance
+                  </label>
+                  <div class="input-container">
+                    <input type="number" id="insurance" placeholder="Max: 3000" min="0" max="3000" step="100" />
+                    <span class="currency-symbol">RM</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="donation">
+                    <i class="fas fa-heart"></i>
+                    Donations
+                  </label>
+                  <div class="input-container">
+                    <input type="number" id="donation" placeholder="Max: 10000" min="0" max="10000" step="100" />
+                    <span class="currency-symbol">RM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="calculate-btn" id="calculateBtn">
+            <i class="fas fa-calculator"></i>
+            <span id="btnText">Calculate Tax</span>
+            <div class="spinner" id="spinner" style="display: none;"></div>
+          </button>
+        </form>
+      </div>
+
+      <!-- Results Section -->
+      <div class="results-section">
+        <div class="results-container" id="resultsContainer">
+          <div class="result-card">
+            <div class="result-header">
+              <i class="fas fa-file-invoice-dollar fa-2x"></i>
+              <h3>Tax Summary</h3>
+            </div>
+            <div class="result-amount" id="totalTax">RM 0.00</div>
+            <div class="result-label">Total Tax Payable</div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-header">
+              <i class="fas fa-chart-line fa-lg"></i>
+              <h3>Income Breakdown</h3>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Gross Income</span>
+              <span class="breakdown-value" id="grossIncome">RM 0.00</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Total Relief</span>
+              <span class="breakdown-value" id="totalRelief">RM 0.00</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Chargeable Income</span>
+              <span class="breakdown-value" id="chargeableIncome">RM 0.00</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Effective Tax Rate</span>
+              <span class="breakdown-value" id="effectiveRate">0.00%</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-header">
+              <i class="fas fa-layer-group fa-lg"></i>
+              <h3>Tax Brackets Applied</h3>
+            </div>
+            <div id="taxBrackets"></div>
+          </div>
+
+          <div class="action-buttons">
+            <button class="btn-secondary" onclick="exportPDF()">
+              <i class="fas fa-file-pdf"></i>
+              Export PDF
+            </button>
+            <button class="btn-secondary" onclick="saveCalculation()">
+              <i class="fas fa-save"></i>
+              Save Result
+            </button>
+            <button class="btn-secondary" onclick="shareResult()">
+              <i class="fas fa-share-alt"></i>
+              Share
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
-    function calculateTax() {
-      const income = parseFloat(document.getElementById('income').value);
-      const epf = Math.min(parseFloat(document.getElementById('epf').value), 4000);
-      const personalRelief = 9000;
-      const socsoRelief = 250;
-      const lifestyleRelief = 2500;
+    // Tax calculation data and utilities
+    const TAX_BRACKETS = [
+      { limit: 5000, rate: 0, label: "First RM 5,000" },
+      { limit: 20000, rate: 0.01, label: "RM 5,001 - RM 20,000" },
+      { limit: 35000, rate: 0.03, label: "RM 20,001 - RM 35,000" },
+      { limit: 50000, rate: 0.06, label: "RM 35,001 - RM 50,000" },
+      { limit: 70000, rate: 0.11, label: "RM 50,001 - RM 70,000" },
+      { limit: 100000, rate: 0.19, label: "RM 70,001 - RM 100,000" },
+      { limit: 400000, rate: 0.25, label: "RM 100,001 - RM 400,000" },
+      { limit: 600000, rate: 0.26, label: "RM 400,001 - RM 600,000" },
+      { limit: 2000000, rate: 0.28, label: "RM 600,001 - RM 2,000,000" },
+      { limit: Infinity, rate: 0.30, label: "Above RM 2,000,000" }
+    ];
 
-      const totalRelief = personalRelief + socsoRelief + lifestyleRelief + epf;
-      const chargeableIncome = Math.max(income - totalRelief, 0);
+    const RELIEF_LIMITS = {
+      personal: 9000,
+      socso: 250,
+      lifestyle: 2500,
+      epf: 4000,
+      medical: 8000,
+      education: 7000,
+      insurance: 3000,
+      donation: 10000
+    };
 
+    let calculationHistory = JSON.parse(localStorage.getItem('taxCalculations') || '[]');
+
+    // Form validation
+    function validateInput(input, min = 0, max = Infinity) {
+      const value = parseFloat(input.value) || 0;
+      const errorElement = document.getElementById(`${input.id}-error`);
+      
+      if (value < min || value > max) {
+        errorElement.textContent = `Value must be between ${min} and ${max}`;
+        errorElement.style.display = 'block';
+        return false;
+      }
+      
+      errorElement.style.display = 'none';
+      return true;
+    }
+
+    // Advanced options toggle
+    function toggleAdvanced() {
+      const content = document.getElementById('advancedContent');
+      const icon = document.getElementById('advancedIcon');
+      
+      if (content.classList.contains('show')) {
+        content.classList.remove('show');
+        icon.style.transform = 'rotate(0deg)';
+      } else {
+        content.classList.add('show');
+        icon.style.transform = 'rotate(180deg)';
+      }
+    }
+
+    // Tax calculation engine
+    function calculateTaxBreakdown(chargeableIncome) {
       let tax = 0;
-      let tiers = [
-        { limit: 5000, rate: 0 },
-        { limit: 20000, rate: 0.01 },
-        { limit: 35000, rate: 0.03 },
-        { limit: 50000, rate: 0.06 },
-        { limit: 70000, rate: 0.11 },
-        { limit: 100000, rate: 0.19 },
-        { limit: 400000, rate: 0.25 },
-        { limit: 600000, rate: 0.26 },
-        { limit: 2000000, rate: 0.28 },
-        { limit: Infinity, rate: 0.30 },
-      ];
+      let previousLimit = 0;
+      const appliedBrackets = [];
 
-      let prev = 0;
-      for (let tier of tiers) {
-        if (chargeableIncome > prev) {
-          const taxable = Math.min(chargeableIncome, tier.limit) - prev;
-          tax += taxable * tier.rate;
-          prev = tier.limit;
+      for (const bracket of TAX_BRACKETS) {
+        if (chargeableIncome > previousLimit) {
+          const taxableAmount = Math.min(chargeableIncome, bracket.limit) - previousLimit;
+          const taxForBracket = taxableAmount * bracket.rate;
+          
+          if (taxableAmount > 0) {
+            appliedBrackets.push({
+              ...bracket,
+              taxableAmount,
+              taxForBracket
+            });
+            tax += taxForBracket;
+          }
+          
+          previousLimit = bracket.limit;
         } else {
           break;
         }
       }
 
-      const resultBox = document.getElementById('result');
-      resultBox.style.display = 'block';
-      resultBox.innerHTML = `
-        <strong>Total Tax Payable:</strong> RM ${tax.toFixed(2)}<br>
-        <strong>Chargeable Income:</strong> RM ${chargeableIncome.toFixed(2)}<br>
-        <strong>Total Relief Claimed:</strong> RM ${totalRelief.toFixed(2)}
-      `;
+      return { tax, appliedBrackets };
     }
+
+    // Main calculation function
+    function calculateTax() {
+      // Get all input values
+      const income = parseFloat(document.getElementById('income').value) || 0;
+      const epf = Math.min(parseFloat(document.getElementById('epf').value) || 0, RELIEF_LIMITS.epf);
+      const medical = Math.min(parseFloat(document.getElementById('medical').value) || 0, RELIEF_LIMITS.medical);
+      const education = Math.min(parseFloat(document.getElementById('education').value) || 0, RELIEF_LIMITS.education);
+      const insurance = Math.min(parseFloat(document.getElementById('insurance').value) || 0, RELIEF_LIMITS.insurance);
+      const donation = Math.min(parseFloat(document.getElementById('donation').value) || 0, RELIEF_LIMITS.donation);
+
+      // Validate income
+      if (income <= 0) {
+        showError('Please enter a valid income amount');
+        return;
+      }
+
+      // Show loading state
+      showLoading(true);
+
+      // Simulate calculation delay for better UX
+      setTimeout(() => {
+        // Calculate reliefs
+        const personalRelief = RELIEF_LIMITS.personal;
+        const socsoRelief = RELIEF_LIMITS.socso;
+        const lifestyleRelief = RELIEF_LIMITS.lifestyle;
+
+        const totalRelief = personalRelief + socsoRelief + lifestyleRelief + epf + medical + education + insurance + donation;
+        const chargeableIncome = Math.max(income - totalRelief, 0);
+
+        // Calculate tax
+        const { tax, appliedBrackets } = calculateTaxBreakdown(chargeableIncome);
+        const effectiveRate = income > 0 ? (tax / income) * 100 : 0;
+
+        // Display results
+        displayResults({
+          income,
+          totalRelief,
+          chargeableIncome,
+          tax,
+          effectiveRate,
+          appliedBrackets
+        });
+
+        // Save to history
+        saveToHistory({
+          date: new Date().toISOString(),
+          income,
+          totalRelief,
+          chargeableIncome,
+          tax,
+          effectiveRate
+        });
+
+        showLoading(false);
+      }, 800);
+    }
+
+    // Display calculation results
+    function displayResults(results) {
+      const { income, totalRelief, chargeableIncome, tax, effectiveRate, appliedBrackets } = results;
+
+      // Update main results
+      document.getElementById('totalTax').textContent = `RM ${tax.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('grossIncome').textContent = `RM ${income.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('totalRelief').textContent = `RM ${totalRelief.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('chargeableIncome').textContent = `RM ${chargeableIncome.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('effectiveRate').textContent = `${effectiveRate.toFixed(2)}%`;
+
+      // Update tax brackets
+      const bracketsContainer = document.getElementById('taxBrackets');
+      bracketsContainer.innerHTML = '';
+
+      appliedBrackets.forEach(bracket => {
+        const bracketElement = document.createElement('div');
+        bracketElement.className = 'bracket-item';
+        bracketElement.innerHTML = `
+          <span>${bracket.label}</span>
+          <span class="bracket-rate">${(bracket.rate * 100).toFixed(0)}% - RM ${bracket.taxForBracket.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+        `;
+        bracketsContainer.appendChild(bracketElement);
+      });
+
+      // Show results with animation
+      const resultsContainer = document.getElementById('resultsContainer');
+      resultsContainer.classList.add('show');
+      resultsContainer.classList.add('success-animation');
+      
+      setTimeout(() => {
+        resultsContainer.classList.remove('success-animation');
+      }, 600);
+    }
+
+    // Loading state management
+    function showLoading(isLoading) {
+      const btn = document.getElementById('calculateBtn');
+      const btnText = document.getElementById('btnText');
+      const spinner = document.getElementById('spinner');
+
+      if (isLoading) {
+        btn.classList.add('loading');
+        btnText.textContent = 'Calculating...';
+        spinner.style.display = 'block';
+      } else {
+        btn.classList.remove('loading');
+        btnText.textContent = 'Calculate Tax';
+        spinner.style.display = 'none';
+      }
+    }
+
+    // Error handling
+    function showError(message) {
+      alert(message); // In a production app, use a proper toast/notification system
+    }
+
+    // History management
+    function saveToHistory(calculation) {
+      calculationHistory.unshift(calculation);
+      if (calculationHistory.length > 10) {
+        calculationHistory = calculationHistory.slice(0, 10);
+      }
+      localStorage.setItem('taxCalculations', JSON.stringify(calculationHistory));
+    }
+
+    // Export functionality
+    function exportPDF() {
+      // In a real application, you would use a library like jsPDF
+      const results = {
+        income: document.getElementById('grossIncome').textContent,
+        relief: document.getElementById('totalRelief').textContent,
+        chargeable: document.getElementById('chargeableIncome').textContent,
+        tax: document.getElementById('totalTax').textContent,
+        rate: document.getElementById('effectiveRate').textContent
+      };
+
+      const printContent = `
+        <div style="font-family: Arial, sans-serif; padding: 20px;">
+          <h1 style="color: #2563eb;">TaxMate Malaysia 2025 - Tax Calculation Report</h1>
+          <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+          <hr>
+          <h2>Tax Summary</h2>
+          <p><strong>Gross Income:</strong> ${results.income}</p>
+          <p><strong>Total Relief:</strong> ${results.relief}</p>
+          <p><strong>Chargeable Income:</strong> ${results.chargeable}</p>
+          <p><strong>Total Tax Payable:</strong> ${results.tax}</p>
+          <p><strong>Effective Tax Rate:</strong> ${results.rate}</p>
+        </div>
+      `;
+
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+      printWindow.print();
+    }
+
+    function saveCalculation() {
+      const results = {
+        date: new Date().toLocaleDateString(),
+        income: document.getElementById('grossIncome').textContent,
+        tax: document.getElementById('totalTax').textContent
+      };
+      
+      alert(`Calculation saved! Total tax: ${results.tax}`);
+    }
+
+    function shareResult() {
+      const tax = document.getElementById('totalTax').textContent;
+      const income = document.getElementById('grossIncome').textContent;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: 'My Tax Calculation - TaxMate Malaysia',
+          text: `My estimated tax for ${income} annual income is ${tax}`,
+          url: window.location.href
+        });
+      } else {
+        const shareText = `My estimated tax for ${income} annual income is ${tax}. Calculated using TaxMate Malaysia 2025.`;
+        navigator.clipboard.writeText(shareText).then(() => {
+          alert('Tax calculation copied to clipboard!');
+        });
+      }
+    }
+
+    // Form submission handler
+    document.getElementById('taxForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      calculateTax();
+    });
+
+    // Input validation on blur
+    document.addEventListener('DOMContentLoaded', function() {
+      const inputs = document.querySelectorAll('input[type="number"]');
+      inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+          const max = parseFloat(this.getAttribute('max')) || Infinity;
+          const min = parseFloat(this.getAttribute('min')) || 0;
+          validateInput(this, min, max);
+        });
+
+        // Auto-format numbers
+        input.addEventListener('input', function() {
+          let value = this.value.replace(/[^\d.]/g, '');
+          if (value.split('.').length > 2) {
+            value = value.substring(0, value.lastIndexOf('.'));
+          }
+          this.value = value;
+        });
+      });
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key === 'Enter') {
+        e.preventDefault();
+        calculateTax();
+      }
+    });
   </script>
 </body>
 </html>
