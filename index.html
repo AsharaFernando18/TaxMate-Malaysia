@@ -13,20 +13,34 @@
       --primary-color: #2563eb;
       --primary-dark: #1e40af;
       --primary-light: #3b82f6;
+      --primary-glow: rgba(37, 99, 235, 0.2);
       --secondary-color: #64748b;
       --success-color: #10b981;
+      --success-light: #d1fae5;
       --warning-color: #f59e0b;
+      --warning-light: #fef3c7;
       --error-color: #ef4444;
+      --error-light: #fee2e2;
       --background-color: #f8fafc;
       --surface-color: #ffffff;
       --text-primary: #1e293b;
       --text-secondary: #64748b;
+      --text-muted: #94a3b8;
       --border-color: #e2e8f0;
+      --border-hover: #cbd5e1;
+      --border-focus: var(--primary-color);
       --border-radius: 12px;
+      --border-radius-lg: 16px;
+      --border-radius-xl: 24px;
       --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
       --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
       --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.15);
+      --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     * {
@@ -37,10 +51,19 @@
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
       min-height: 100vh;
       color: var(--text-primary);
       line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .app-container {
@@ -49,38 +72,116 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
+      position: relative;
+    }
+
+    .app-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 80%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+      pointer-events: none;
     }
 
     .main-container {
       background: var(--surface-color);
-      border-radius: 24px;
-      box-shadow: var(--shadow-lg);
+      border-radius: var(--border-radius-xl);
+      box-shadow: var(--shadow-xl), var(--shadow-glow);
       overflow: hidden;
       max-width: 1200px;
       width: 100%;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      animation: containerSlideUp 0.8s var(--spring);
+      z-index: 1;
+    }
+
+    @keyframes containerSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     .calculator-section {
       padding: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .calculator-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.03) 0%, transparent 70%);
+      pointer-events: none;
     }
 
     .results-section {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background-size: 200% 200%;
+      animation: gradientFloat 8s ease-in-out infinite;
       color: white;
       padding: 48px;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .results-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.05) 50%, transparent 70%);
+      transform: translateX(-100%);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes gradientFloat {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
     }
 
     .header {
       text-align: center;
       margin-bottom: 40px;
+      animation: headerFadeIn 1s ease-out 0.3s both;
+    }
+
+    @keyframes headerFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .header h1 {
@@ -88,16 +189,75 @@
       font-weight: 700;
       color: var(--text-primary);
       margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+    }
+
+    .header h1::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+      border-radius: 2px;
+      animation: underlineGrow 0.8s ease-out 0.8s both;
+    }
+
+    @keyframes underlineGrow {
+      from {
+        width: 0;
+        opacity: 0;
+      }
+      to {
+        width: 60px;
+        opacity: 1;
+      }
     }
 
     .header .subtitle {
       color: var(--text-secondary);
       font-size: 1.1rem;
       font-weight: 400;
+      opacity: 0;
+      animation: subtitleFadeIn 0.6s ease-out 1s both;
+    }
+
+    @keyframes subtitleFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .form-group {
       margin-bottom: 24px;
+      opacity: 0;
+      animation: formGroupSlideIn 0.5s ease-out both;
+    }
+
+    .form-group:nth-child(1) { animation-delay: 0.2s; }
+    .form-group:nth-child(2) { animation-delay: 0.3s; }
+    .form-group:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes formGroupSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
     label {
@@ -107,53 +267,93 @@
       color: var(--text-primary);
       margin-bottom: 8px;
       font-size: 0.95rem;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    label:hover {
+      color: var(--primary-color);
     }
 
     label i {
       margin-right: 8px;
       color: var(--primary-color);
       width: 16px;
+      transition: var(--transition);
+    }
+
+    label:hover i {
+      transform: scale(1.1);
+      color: var(--primary-dark);
     }
 
     .tooltip {
       position: relative;
       margin-left: 8px;
       cursor: help;
+      transition: var(--transition);
+    }
+
+    .tooltip:hover {
+      transform: scale(1.1);
     }
 
     .tooltip i {
       color: var(--text-secondary);
       font-size: 0.875rem;
+      transition: var(--transition);
+    }
+
+    .tooltip:hover i {
+      color: var(--primary-color);
     }
 
     .tooltip .tooltip-text {
       visibility: hidden;
-      width: 250px;
-      background-color: var(--text-primary);
+      width: 280px;
+      background: linear-gradient(135deg, var(--text-primary) 0%, #334155 100%);
       color: white;
       text-align: left;
-      border-radius: 8px;
-      padding: 12px;
+      border-radius: var(--border-radius);
+      padding: 16px;
       position: absolute;
-      z-index: 1;
-      bottom: 125%;
+      z-index: 1000;
+      bottom: 140%;
       left: 50%;
-      margin-left: -125px;
+      margin-left: -140px;
       opacity: 0;
-      transition: var(--transition);
+      transform: translateY(10px) scale(0.9);
+      transition: var(--transition-slow);
       font-size: 0.875rem;
       font-weight: 400;
-      line-height: 1.4;
-      box-shadow: var(--shadow-md);
+      line-height: 1.5;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .tooltip .tooltip-text::before {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -8px;
+      border: 8px solid transparent;
+      border-top-color: var(--text-primary);
     }
 
     .tooltip:hover .tooltip-text {
       visibility: visible;
       opacity: 1;
+      transform: translateY(0) scale(1);
     }
 
     .input-container {
       position: relative;
+      transition: var(--transition);
+    }
+
+    .input-container:hover {
+      transform: translateY(-1px);
     }
 
     input[type="number"] {
@@ -164,12 +364,36 @@
       font-size: 1rem;
       transition: var(--transition);
       background: var(--surface-color);
+      font-family: inherit;
+      position: relative;
+    }
+
+    input[type="number"]:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-sm);
     }
 
     input[type="number"]:focus {
       outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 4px var(--primary-glow), var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    input[type="number"]:valid {
+      border-color: var(--success-color);
+    }
+
+    input[type="number"].error {
+      border-color: var(--error-color);
+      background-color: var(--error-light);
+      animation: inputShake 0.5s ease-in-out;
+    }
+
+    @keyframes inputShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
     }
 
     .currency-symbol {
@@ -178,14 +402,34 @@
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-secondary);
-      font-weight: 500;
+      font-weight: 600;
       pointer-events: none;
+      transition: var(--transition);
+      font-size: 0.9rem;
+    }
+
+    input[type="number"]:focus + .currency-symbol {
+      color: var(--primary-color);
+      transform: translateY(-50%) scale(1.05);
     }
 
     .advanced-options {
       margin-top: 32px;
       border-top: 2px solid var(--border-color);
       padding-top: 32px;
+      opacity: 0;
+      animation: advancedSlideIn 0.6s ease-out 0.8s both;
+    }
+
+    @keyframes advancedSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .advanced-toggle {
@@ -196,30 +440,89 @@
       font-weight: 500;
       margin-bottom: 24px;
       transition: var(--transition);
+      padding: 8px 0;
+      border-radius: var(--border-radius);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .advanced-toggle::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .advanced-toggle:hover::before {
+      left: 100%;
     }
 
     .advanced-toggle:hover {
       color: var(--primary-dark);
+      transform: translateX(4px);
     }
 
     .advanced-toggle i {
       margin-left: 8px;
-      transition: var(--transition);
+      transition: var(--transition-slow);
     }
 
     .advanced-content {
       display: none;
-      animation: slideDown 0.3s ease-out;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: var(--transition-slow);
     }
 
     .advanced-content.show {
       display: block;
+      opacity: 1;
+      max-height: 800px;
+      animation: advancedContentSlide 0.5s var(--spring);
+    }
+
+    @keyframes advancedContentSlide {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+        max-height: 0;
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 800px;
+      }
     }
 
     .relief-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
+    }
+
+    .relief-grid .form-group {
+      animation: reliefItemSlide 0.4s ease-out both;
+    }
+
+    .relief-grid .form-group:nth-child(1) { animation-delay: 0.1s; }
+    .relief-grid .form-group:nth-child(2) { animation-delay: 0.2s; }
+    .relief-grid .form-group:nth-child(3) { animation-delay: 0.3s; }
+    .relief-grid .form-group:nth-child(4) { animation-delay: 0.4s; }
+
+    @keyframes reliefItemSlide {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     .calculate-btn {
@@ -238,35 +541,89 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: buttonSlideUp 0.6s ease-out 1.2s both;
+    }
+
+    @keyframes buttonSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .calculate-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .calculate-btn:hover::before {
+      left: 100%;
     }
 
     .calculate-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-xl), 0 8px 25px rgba(37, 99, 235, 0.3);
     }
 
     .calculate-btn:active {
-      transform: translateY(0);
+      transform: translateY(-1px);
     }
 
     .calculate-btn.loading {
-      opacity: 0.8;
+      opacity: 0.9;
       cursor: not-allowed;
+      transform: none;
+    }
+
+    .calculate-btn.loading:hover {
+      transform: none;
+      box-shadow: var(--shadow-lg);
     }
 
     .spinner {
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
       border-top-color: white;
       animation: spin 1s ease-in-out infinite;
     }
 
+    .progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #10b981, #3b82f6, #8b5cf6);
+      border-radius: 3px;
+      transform: scaleX(0);
+      transform-origin: left;
+      animation: progressFill 2s ease-in-out infinite;
+    }
+
+    @keyframes progressFill {
+      0% { transform: scaleX(0); }
+      50% { transform: scaleX(0.7); }
+      100% { transform: scaleX(1); }
+    }
+
     .results-container {
       opacity: 0;
-      transform: translateY(20px);
-      transition: var(--transition);
+      transform: translateY(30px);
+      transition: var(--transition-slow);
     }
 
     .results-container.show {
@@ -277,10 +634,35 @@
     .result-card {
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: var(--border-radius);
+      border-radius: var(--border-radius-lg);
       padding: 24px;
       margin-bottom: 24px;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(20px);
+      transition: var(--transition);
+      opacity: 0;
+      transform: translateX(-20px);
+      animation: resultCardSlide 0.6s ease-out both;
+    }
+
+    .result-card:nth-child(1) { animation-delay: 0.1s; }
+    .result-card:nth-child(2) { animation-delay: 0.2s; }
+    .result-card:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes resultCardSlide {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .result-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      background: rgba(255, 255, 255, 0.15);
     }
 
     .result-header {
@@ -299,11 +681,22 @@
       font-size: 2.5rem;
       font-weight: 700;
       margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: amountPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes amountPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
     }
 
     .result-label {
       opacity: 0.9;
       font-size: 0.95rem;
+      font-weight: 500;
     }
 
     .breakdown-item {
@@ -312,6 +705,31 @@
       align-items: center;
       padding: 12px 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      transition: var(--transition);
+      opacity: 0;
+      animation: breakdownSlide 0.4s ease-out both;
+    }
+
+    .breakdown-item:nth-child(1) { animation-delay: 0.1s; }
+    .breakdown-item:nth-child(2) { animation-delay: 0.2s; }
+    .breakdown-item:nth-child(3) { animation-delay: 0.3s; }
+    .breakdown-item:nth-child(4) { animation-delay: 0.4s; }
+
+    @keyframes breakdownSlide {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .breakdown-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      padding-left: 8px;
+      border-radius: 6px;
     }
 
     .breakdown-item:last-child {
@@ -320,10 +738,18 @@
 
     .breakdown-label {
       opacity: 0.9;
+      transition: var(--transition);
     }
 
     .breakdown-value {
       font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .breakdown-item:hover .breakdown-label,
+    .breakdown-item:hover .breakdown-value {
+      opacity: 1;
+      transform: translateX(4px);
     }
 
     .tax-brackets {
@@ -391,41 +817,246 @@
       .main-container {
         grid-template-columns: 1fr;
         max-width: 500px;
+        margin: 10px;
+        border-radius: var(--border-radius-lg);
       }
       
       .calculator-section,
       .results-section {
-        padding: 32px 24px;
+        padding: 24px 20px;
       }
       
       .header h1 {
         font-size: 2rem;
       }
+
+      .header .subtitle {
+        font-size: 1rem;
+      }
       
       .relief-grid {
         grid-template-columns: 1fr;
+        gap: 12px;
       }
       
       .result-amount {
         font-size: 2rem;
+      }
+
+      .tooltip .tooltip-text {
+        width: 250px;
+        margin-left: -125px;
+        font-size: 0.8rem;
+        bottom: 120%;
+      }
+
+      .calculate-btn {
+        padding: 16px 20px;
+        font-size: 1rem;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .btn-secondary {
+        padding: 14px 16px;
+      }
+
+      /* Enhanced mobile touch targets */
+      input[type="number"] {
+        padding: 18px 48px 18px 16px;
+        font-size: 16px; /* Prevent zoom on iOS */
+      }
+
+      label {
+        font-size: 1rem;
+        margin-bottom: 10px;
+      }
+
+      .advanced-toggle {
+        padding: 12px 8px;
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .app-container {
+        padding: 10px;
+      }
+
+      .calculator-section,
+      .results-section {
+        padding: 20px 16px;
+      }
+
+      .header h1 {
+        font-size: 1.75rem;
+      }
+
+      .result-amount {
+        font-size: 1.75rem;
+      }
+
+      .breakdown-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        padding: 16px 0;
+      }
+
+      .bracket-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        padding: 12px;
+      }
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      :root {
+        --border-color: #000000;
+        --text-secondary: #000000;
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+      }
+    }
+
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Dark mode support */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface-color: #1e293b;
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --border-color: #334155;
+        --background-color: #0f172a;
+      }
+
+      .main-container {
+        background: var(--surface-color);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      input[type="number"] {
+        background: #334155;
+        color: var(--text-primary);
+        border-color: #475569;
+      }
+
+      input[type="number"]:focus {
+        background: #475569;
       }
     }
 
     .error-message {
       color: var(--error-color);
       font-size: 0.875rem;
-      margin-top: 4px;
+      margin-top: 8px;
       display: none;
+      padding: 8px 12px;
+      background: var(--error-light);
+      border-radius: var(--border-radius);
+      border-left: 3px solid var(--error-color);
+      animation: errorSlideIn 0.3s ease-out;
+    }
+
+    @keyframes errorSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+        max-height: 0;
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 50px;
+      }
+    }
+
+    .success-message {
+      color: var(--success-color);
+      font-size: 0.875rem;
+      margin-top: 8px;
+      display: none;
+      padding: 8px 12px;
+      background: var(--success-light);
+      border-radius: var(--border-radius);
+      border-left: 3px solid var(--success-color);
+      animation: successSlideIn 0.3s ease-out;
+    }
+
+    @keyframes successSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+        max-height: 0;
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 50px;
+      }
     }
 
     .success-animation {
-      animation: pulse 0.6s ease-in-out;
+      animation: successPulse 0.8s ease-in-out;
     }
 
-    @keyframes pulse {
+    @keyframes successPulse {
       0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+      50% { transform: scale(1.02); }
       100% { transform: scale(1); }
+    }
+
+    /* Loading overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      backdrop-filter: blur(5px);
+    }
+
+    .loading-overlay.show {
+      display: flex;
+    }
+
+    .loading-content {
+      background: white;
+      padding: 40px;
+      border-radius: var(--border-radius-lg);
+      text-align: center;
+      box-shadow: var(--shadow-xl);
+      animation: loadingBounce 0.5s ease-out;
+    }
+
+    @keyframes loadingBounce {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
   </style>
 </head>
@@ -454,6 +1085,7 @@
               <span class="currency-symbol">RM</span>
             </div>
             <div class="error-message" id="income-error"></div>
+            <div class="success-message" id="income-success">✓ Valid income amount</div>
           </div>
 
           <div class="form-group">
@@ -469,6 +1101,8 @@
               <input type="number" id="epf" placeholder="Maximum: 4000" min="0" max="4000" step="100" />
               <span class="currency-symbol">RM</span>
             </div>
+            <div class="error-message" id="epf-error"></div>
+            <div class="success-message" id="epf-success">✓ Valid EPF contribution</div>
           </div>
 
           <div class="advanced-options">
@@ -624,34 +1258,92 @@
 
     let calculationHistory = JSON.parse(localStorage.getItem('taxCalculations') || '[]');
 
-    // Form validation
+    // Form validation with enhanced UX
     function validateInput(input, min = 0, max = Infinity) {
       const value = parseFloat(input.value) || 0;
       const errorElement = document.getElementById(`${input.id}-error`);
+      const successElement = document.getElementById(`${input.id}-success`);
       
-      if (value < min || value > max) {
-        errorElement.textContent = `Value must be between ${min} and ${max}`;
-        errorElement.style.display = 'block';
+      // Remove previous states
+      input.classList.remove('error');
+      if (errorElement) errorElement.style.display = 'none';
+      if (successElement) successElement.style.display = 'none';
+      
+      if (input.value && (value < min || value > max)) {
+        input.classList.add('error');
+        if (errorElement) {
+          errorElement.textContent = `Value must be between ${formatCurrency(min)} and ${formatCurrency(max)}`;
+          errorElement.style.display = 'block';
+        }
         return false;
       }
       
-      errorElement.style.display = 'none';
+      if (input.value && value >= min && value <= max) {
+        if (successElement) {
+          successElement.style.display = 'block';
+        }
+      }
+      
       return true;
     }
 
-    // Advanced options toggle
+    // Enhanced number formatting
+    function formatCurrency(amount) {
+      return `RM ${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function formatNumber(num) {
+      return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    // Enhanced advanced options toggle
     function toggleAdvanced() {
       const content = document.getElementById('advancedContent');
       const icon = document.getElementById('advancedIcon');
+      const toggle = document.querySelector('.advanced-toggle');
       
       if (content.classList.contains('show')) {
         content.classList.remove('show');
         icon.style.transform = 'rotate(0deg)';
+        toggle.style.color = 'var(--primary-color)';
+        
+        // Animate out the form groups
+        const formGroups = content.querySelectorAll('.form-group');
+        formGroups.forEach((group, index) => {
+          setTimeout(() => {
+            group.style.animation = 'reliefItemSlideOut 0.3s ease-in both';
+          }, index * 50);
+        });
       } else {
         content.classList.add('show');
         icon.style.transform = 'rotate(180deg)';
+        toggle.style.color = 'var(--primary-dark)';
+        
+        // Trigger animation for form groups
+        setTimeout(() => {
+          const formGroups = content.querySelectorAll('.form-group');
+          formGroups.forEach((group, index) => {
+            group.style.animation = `reliefItemSlide 0.4s ease-out ${0.1 + (index * 0.1)}s both`;
+          });
+        }, 100);
       }
     }
+
+    // Add slide out animation
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = `
+      @keyframes reliefItemSlideOut {
+        from {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        to {
+          opacity: 0;
+          transform: translateY(-20px) scale(0.95);
+        }
+      }
+    `;
+    document.head.appendChild(styleSheet);
 
     // Tax calculation engine
     function calculateTaxBreakdown(chargeableIncome) {
@@ -739,42 +1431,127 @@
       }, 800);
     }
 
-    // Display calculation results
+    // Enhanced display results with better animations
     function displayResults(results) {
       const { income, totalRelief, chargeableIncome, tax, effectiveRate, appliedBrackets } = results;
 
-      // Update main results
-      document.getElementById('totalTax').textContent = `RM ${tax.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      document.getElementById('grossIncome').textContent = `RM ${income.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      document.getElementById('totalRelief').textContent = `RM ${totalRelief.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      document.getElementById('chargeableIncome').textContent = `RM ${chargeableIncome.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      document.getElementById('effectiveRate').textContent = `${effectiveRate.toFixed(2)}%`;
+      // Update main results with animations
+      const totalTaxElement = document.getElementById('totalTax');
+      const elements = {
+        totalTax: tax,
+        grossIncome: income,
+        totalRelief: totalRelief,
+        chargeableIncome: chargeableIncome,
+        effectiveRate: effectiveRate
+      };
 
-      // Update tax brackets
+      // Animate numbers counting up
+      Object.entries(elements).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (id === 'effectiveRate') {
+          animateNumber(element, 0, value, '%', 1000);
+        } else {
+          animateNumber(element, 0, value, 'RM', 1200);
+        }
+      });
+
+      // Update tax brackets with staggered animation
       const bracketsContainer = document.getElementById('taxBrackets');
       bracketsContainer.innerHTML = '';
 
-      appliedBrackets.forEach(bracket => {
+      appliedBrackets.forEach((bracket, index) => {
         const bracketElement = document.createElement('div');
         bracketElement.className = 'bracket-item';
+        bracketElement.style.opacity = '0';
+        bracketElement.style.transform = 'translateX(-20px)';
         bracketElement.innerHTML = `
           <span>${bracket.label}</span>
-          <span class="bracket-rate">${(bracket.rate * 100).toFixed(0)}% - RM ${bracket.taxForBracket.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+          <span class="bracket-rate">${(bracket.rate * 100).toFixed(0)}% - ${formatCurrency(bracket.taxForBracket)}</span>
         `;
         bracketsContainer.appendChild(bracketElement);
+
+        // Animate in with delay
+        setTimeout(() => {
+          bracketElement.style.transition = 'all 0.4s ease-out';
+          bracketElement.style.opacity = '1';
+          bracketElement.style.transform = 'translateX(0)';
+        }, 100 + (index * 100));
       });
 
-      // Show results with animation
+      // Show results with enhanced animation
       const resultsContainer = document.getElementById('resultsContainer');
       resultsContainer.classList.add('show');
       resultsContainer.classList.add('success-animation');
       
+      // Add confetti effect for large tax savings
+      if (totalRelief > 10000) {
+        createConfetti();
+      }
+      
       setTimeout(() => {
         resultsContainer.classList.remove('success-animation');
-      }, 600);
+      }, 800);
     }
 
-    // Loading state management
+    // Number animation function
+    function animateNumber(element, start, end, prefix = '', duration = 1000) {
+      const startTime = Date.now();
+      const range = end - start;
+
+      function updateNumber() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Use easing function for smooth animation
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+        const current = start + (range * easeOutQuart);
+
+        if (prefix === '%') {
+          element.textContent = `${current.toFixed(2)}%`;
+        } else {
+          element.textContent = `${prefix} ${formatNumber(current)}`;
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(updateNumber);
+        }
+      }
+
+      updateNumber();
+    }
+
+    // Confetti effect for celebrations
+    function createConfetti() {
+      const colors = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+      const confettiCount = 50;
+
+      for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'fixed';
+        confetti.style.width = '8px';
+        confetti.style.height = '8px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = '-10px';
+        confetti.style.zIndex = '10000';
+        confetti.style.borderRadius = '50%';
+        confetti.style.pointerEvents = 'none';
+        
+        document.body.appendChild(confetti);
+
+        const animation = confetti.animate([
+          { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+          { transform: `translateY(100vh) rotate(720deg)`, opacity: 0 }
+        ], {
+          duration: 3000 + Math.random() * 2000,
+          easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+        });
+
+        animation.onfinish = () => confetti.remove();
+      }
+    }
+
+    // Enhanced loading state management
     function showLoading(isLoading) {
       const btn = document.getElementById('calculateBtn');
       const btnText = document.getElementById('btnText');
@@ -784,10 +1561,52 @@
         btn.classList.add('loading');
         btnText.textContent = 'Calculating...';
         spinner.style.display = 'block';
+        
+        // Add progress bar
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress-bar';
+        progressBar.id = 'progressBar';
+        btn.appendChild(progressBar);
+        
+        // Create loading overlay
+        showLoadingOverlay(true);
       } else {
         btn.classList.remove('loading');
         btnText.textContent = 'Calculate Tax';
         spinner.style.display = 'none';
+        
+        // Remove progress bar
+        const progressBar = document.getElementById('progressBar');
+        if (progressBar) progressBar.remove();
+        
+        // Remove loading overlay
+        showLoadingOverlay(false);
+      }
+    }
+
+    function showLoadingOverlay(show) {
+      let overlay = document.getElementById('loadingOverlay');
+      
+      if (show) {
+        if (!overlay) {
+          overlay = document.createElement('div');
+          overlay.id = 'loadingOverlay';
+          overlay.className = 'loading-overlay';
+          overlay.innerHTML = `
+            <div class="loading-content">
+              <div class="spinner" style="display: block; margin: 0 auto 20px;"></div>
+              <h3 style="margin: 0 0 10px; color: var(--text-primary);">Calculating Your Tax</h3>
+              <p style="margin: 0; color: var(--text-secondary);">Processing your information...</p>
+            </div>
+          `;
+          document.body.appendChild(overlay);
+        }
+        overlay.classList.add('show');
+      } else {
+        if (overlay) {
+          overlay.classList.remove('show');
+          setTimeout(() => overlay.remove(), 300);
+        }
       }
     }
 
@@ -870,23 +1689,74 @@
       calculateTax();
     });
 
-    // Input validation on blur
+    // Enhanced input validation on blur and input
     document.addEventListener('DOMContentLoaded', function() {
       const inputs = document.querySelectorAll('input[type="number"]');
+      
       inputs.forEach(input => {
-        input.addEventListener('blur', function() {
-          const max = parseFloat(this.getAttribute('max')) || Infinity;
-          const min = parseFloat(this.getAttribute('min')) || 0;
-          validateInput(this, min, max);
-        });
-
-        // Auto-format numbers
+        // Real-time validation on input
         input.addEventListener('input', function() {
           let value = this.value.replace(/[^\d.]/g, '');
           if (value.split('.').length > 2) {
             value = value.substring(0, value.lastIndexOf('.'));
           }
           this.value = value;
+          
+          // Debounced validation
+          clearTimeout(this.validationTimeout);
+          this.validationTimeout = setTimeout(() => {
+            const max = parseFloat(this.getAttribute('max')) || Infinity;
+            const min = parseFloat(this.getAttribute('min')) || 0;
+            validateInput(this, min, max);
+          }, 300);
+        });
+
+        // Validation on blur
+        input.addEventListener('blur', function() {
+          const max = parseFloat(this.getAttribute('max')) || Infinity;
+          const min = parseFloat(this.getAttribute('min')) || 0;
+          validateInput(this, min, max);
+        });
+
+        // Enhanced focus effects
+        input.addEventListener('focus', function() {
+          this.parentElement.style.transform = 'translateY(-2px)';
+          this.parentElement.style.boxShadow = 'var(--shadow-md)';
+        });
+
+        input.addEventListener('blur', function() {
+          this.parentElement.style.transform = 'translateY(0)';
+          this.parentElement.style.boxShadow = 'none';
+        });
+
+        // Smooth number formatting on blur
+        input.addEventListener('blur', function() {
+          if (this.value) {
+            const value = parseFloat(this.value);
+            if (!isNaN(value)) {
+              // Add subtle animation when formatting
+              this.style.transition = 'color 0.3s ease';
+              this.style.color = 'var(--success-color)';
+              setTimeout(() => {
+                this.style.color = '';
+              }, 500);
+            }
+          }
+        });
+      });
+
+      // Add floating labels effect
+      inputs.forEach(input => {
+        const label = input.closest('.form-group').querySelector('label');
+        
+        input.addEventListener('focus', () => {
+          label.style.transform = 'translateY(-2px)';
+          label.style.color = 'var(--primary-color)';
+        });
+        
+        input.addEventListener('blur', () => {
+          label.style.transform = 'translateY(0)';
+          label.style.color = 'var(--text-primary)';
         });
       });
     });
