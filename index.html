@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Malaysia Tax Calculator 2025</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-top: 20px;
+      color: #444;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    button {
+      margin-top: 30px;
+      width: 100%;
+      background-color: #007bff;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 30px;
+      padding: 20px;
+      background: #e8f0fe;
+      border-radius: 10px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Malaysia Tax Calculator 2025</h2>
+    <label for="income">Annual Gross Income (RM)</label>
+    <input type="number" id="income" placeholder="e.g., 60000" />
+
+    <label for="epf">Annual EPF Contribution (RM)</label>
+    <input type="number" id="epf" placeholder="e.g., 4000 (max claimable)" />
+
+    <button onclick="calculateTax()">Calculate Tax</button>
+
+    <div class="result" id="result" style="display:none"></div>
+  </div>
+
+  <script>
+    function calculateTax() {
+      const income = parseFloat(document.getElementById('income').value);
+      const epf = Math.min(parseFloat(document.getElementById('epf').value), 4000);
+      const personalRelief = 9000;
+      const socsoRelief = 250;
+      const lifestyleRelief = 2500;
+
+      const totalRelief = personalRelief + socsoRelief + lifestyleRelief + epf;
+      const chargeableIncome = Math.max(income - totalRelief, 0);
+
+      let tax = 0;
+      let tiers = [
+        { limit: 5000, rate: 0 },
+        { limit: 20000, rate: 0.01 },
+        { limit: 35000, rate: 0.03 },
+        { limit: 50000, rate: 0.06 },
+        { limit: 70000, rate: 0.11 },
+        { limit: 100000, rate: 0.19 },
+        { limit: 400000, rate: 0.25 },
+        { limit: 600000, rate: 0.26 },
+        { limit: 2000000, rate: 0.28 },
+        { limit: Infinity, rate: 0.30 },
+      ];
+
+      let prev = 0;
+      for (let tier of tiers) {
+        if (chargeableIncome > prev) {
+          const taxable = Math.min(chargeableIncome, tier.limit) - prev;
+          tax += taxable * tier.rate;
+          prev = tier.limit;
+        } else {
+          break;
+        }
+      }
+
+      const resultBox = document.getElementById('result');
+      resultBox.style.display = 'block';
+      resultBox.innerHTML = `
+        <strong>Total Tax Payable:</strong> RM ${tax.toFixed(2)}<br>
+        <strong>Chargeable Income:</strong> RM ${chargeableIncome.toFixed(2)}<br>
+        <strong>Total Relief Claimed:</strong> RM ${totalRelief.toFixed(2)}
+      `;
+    }
+  </script>
+</body>
+</html>
